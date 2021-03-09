@@ -12,9 +12,25 @@ sequelize = new Sequelize('mysql://localhost:3306/pinploy', {
     password: 'root'
 });
 
+
+const { Task, SubTask } = require("./models");
+
 // sync models to db - and populate with data
-let sync = sequelize.sync({ force: true });
-sync.then(() => populateDB());
+sequelize.sync({ force: true })
+    .then(() => populateDB());
+
+
+function populateDB () {
+    console.log('Adding data to db');
+    Task.create({ title: 'House chores', difficulty: 'medium' });
+    Task.create({ title: 'Car maintenance', difficulty: 'hard' });
+
+    SubTask.create({ title: 'Vacuum all rooms', hours: 2.5, taskId: 1 });
+    SubTask.create({ title: 'Take out the trash', hours: 99, taskId: 1 });
+    SubTask.create({ title: 'Assemble IKEA furniture', hours: 4, taskId: 1 });
+    SubTask.create({ title: 'Change oil', hours: 2.5, taskId: 2 });
+    SubTask.create({ title: 'Take car to the carwash', hours: 1, taskId: 2 });
+}
 
 
 // set port
@@ -29,21 +45,6 @@ app.listen(port, (error) => {
         console.log('Server running on', port);
     }
 });
-
-
-const { Task, SubTask } = require("./models");
-
-function populateDB () {
-    console.log('Adding data to db');
-    Task.create({ title: 'House chores', difficulty: 'medium' });
-    Task.create({ title: 'Car maintenance', difficulty: 'hard' });
-
-    SubTask.create({ title: 'Vacuum all rooms', hours: 2.5, taskId: 1 });
-    SubTask.create({ title: 'Take out the trash', hours: 99, taskId: 1 });
-    SubTask.create({ title: 'Assemble IKEA furniture', hours: 4, taskId: 1 });
-    SubTask.create({ title: 'Change oil', hours: 2.5, taskId: 2 });
-    SubTask.create({ title: 'Take car to the carwash', hours: 1, taskId: 2 });
-}
 
 
 // routing + controller
